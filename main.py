@@ -1,5 +1,6 @@
 import sys
 import pygame
+from random import randint
 
 #define variables
 width=600
@@ -23,7 +24,17 @@ clock=pygame.time.Clock()
 # init load images
 bg=pygame.image.load("resources/green2.jpg")
 tree=pygame.image.load("resources/tree2.png")
-bird=pygame.image.load("resources/bird.png")
+
+# load list of birds
+birds=[]
+for birdno in range(10):
+    #tmpBird={"img":bird, "name":(f'Bird_{birdno}'), "counter":0, "xpos":randint((width-delta),width})}
+    tmpxpos=randint((width-delta),width)
+    tmpypos=randint((delta),4*delta)
+    tmpspeed=randint(1,3)
+    tmplink = pygame.image.load("resources/bird.png")
+    tmpBird={"link":tmplink,"name":"Bird_"+str(birdno), "count":0,"xpos":tmpxpos,"ypos":tmpypos, "speed":tmpspeed}
+    birds.append(tmpBird)
 
 #start the loop
 while True:
@@ -36,13 +47,13 @@ while True:
     #put background on screen
     screen.blit(bg,(0,0))
     # modify moving objects
-    xpos_bird=xpos_bird-speed_bird
-
+    for bird in birds:
+        bird['xpos']-=bird['speed']
+        screen.blit(bird['link'], (bird['xpos'],bird['ypos']))
     #put paint stuff on screen
     screen.blit(tree,(100,100))
-    screen.blit(bird,(xpos_bird,ypos_bird))
 
     #update screen
     pygame.display.update()
     #tick the clock
-    clock.tick(120)
+    clock.tick(60)
