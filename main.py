@@ -1,9 +1,22 @@
 import sys
 import pygame
 
+#define variables
+width=600
+height=400
+delta=int(width/10)
+
+xpos_bird=width-delta
+ypos_bird=delta
+xpos_tree=100
+ypos_tree=100
+
+speed_bird=1
+framerate=120
+
 pygame.init()
 #set screen
-screen=pygame.display.set_mode((600,400))
+screen=pygame.display.set_mode((width,height))
 # init clock from time
 clock=pygame.time.Clock()
 
@@ -22,9 +35,12 @@ while True:
 
     #put background on screen
     screen.blit(bg,(0,0))
+    # modify moving objects
+    xpos_bird=xpos_bird-speed_bird
+
     #put paint stuff on screen
     screen.blit(tree,(100,100))
-    screen.blit(bird,(50,50))
+    screen.blit(bird,(xpos_bird,ypos_bird))
 
     #update screen
     pygame.display.update()
