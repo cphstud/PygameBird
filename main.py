@@ -24,6 +24,7 @@ clock=pygame.time.Clock()
 # init load images
 bg=pygame.image.load("resources/green2.jpg")
 tree=pygame.image.load("resources/tree2.png")
+aim=pygame.image.load("resources/crosshair.png")
 
 # load list of birds
 birds=[]
@@ -52,6 +53,7 @@ while True:
         screen.blit(bird['link'], (bird['xpos'],bird['ypos']))
     #put paint stuff on screen
     screen.blit(tree,(100,100))
+    screen.blit(aim,((pygame.mouse.get_pos())))
 
     #update screen
     pygame.display.update()
