@@ -1,18 +1,12 @@
 import sys
 import pygame
-from random import randint
+from Bird import Bird
 
 #define variables
 width=600
 height=400
-delta=int(width/10)
-
-xpos_bird=width-delta
-ypos_bird=delta
 xpos_tree=100
 ypos_tree=100
-
-speed_bird=1
 framerate=120
 
 pygame.init()
@@ -29,12 +23,7 @@ aim=pygame.image.load("resources/crosshair.png")
 # load list of birds
 birds=[]
 for birdno in range(10):
-    #tmpBird={"img":bird, "name":(f'Bird_{birdno}'), "counter":0, "xpos":randint((width-delta),width})}
-    tmpxpos=randint((width-delta),width)
-    tmpypos=randint((delta),4*delta)
-    tmpspeed=randint(1,3)
-    tmplink = pygame.image.load("resources/bird.png")
-    tmpBird={"link":tmplink,"name":"Bird_"+str(birdno), "count":0,"xpos":tmpxpos,"ypos":tmpypos, "speed":tmpspeed}
+    tmpBird=Bird(screen,birdno,"resources/bird.png")
     birds.append(tmpBird)
 
 #start the loop
@@ -49,8 +38,8 @@ while True:
     screen.blit(bg,(0,0))
     # modify moving objects
     for bird in birds:
-        bird['xpos']-=bird['speed']
-        screen.blit(bird['link'], (bird['xpos'],bird['ypos']))
+        bird.move()
+        bird.blitme()
     #put paint stuff on screen
     screen.blit(tree,(100,100))
     screen.blit(aim,((pygame.mouse.get_pos())))
