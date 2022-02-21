@@ -2,6 +2,7 @@ import sys
 import pygame
 
 #define variables
+white=(250,250,250)
 width=600
 height=400
 delta=int(width/10)
@@ -26,6 +27,9 @@ tree=pygame.image.load("resources/tree2.png")
 bird=pygame.image.load("resources/bird.png")
 croshair=pygame.image.load("resources/crosshair.png")
 startbut=pygame.image.load("resources/start.jpeg")
+# create rects around stuff you want to target
+croshair_rect = croshair.get_rect(center=(width/2,height/2))
+bird_rect=bird.get_rect(center=(xpos_bird,ypos_bird))
 
 #  create rect
 
@@ -40,6 +44,10 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            #what should happen?
+            if croshair_rect.colliderect(bird_rect):
+                xpos_bird=width+100
         if event.type == pygame.MOUSEMOTION:
             croshair_rect=croshair.get_rect(center = event.pos)
         if event.type == pygame.KEYDOWN:
@@ -48,14 +56,15 @@ while True:
     #put background on screen
     screen.blit(bg,(0,0))
     if not active:
+        screen.fill(white)
         screen.blit(startbut,(150,100))
     # modify moving objects
     else :
         xpos_bird=xpos_bird-speed_bird
-
+        bird_rect = bird.get_rect(center=(xpos_bird, ypos_bird))
         #put paint stuff on screen
         screen.blit(tree,(100,100))
-        screen.blit(bird,(xpos_bird,ypos_bird))
+        screen.blit(bird,bird_rect)
         screen.blit(croshair,croshair_rect)
 
     #update screen
