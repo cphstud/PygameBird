@@ -19,6 +19,7 @@ screen = pygame.display.set_mode((width,height))
 bgpicture=pygame.image.load("resources/green2.png")
 tree=pygame.image.load("resources/tree2.png")
 bird=pygame.image.load("resources/bird.png")
+sigtekorn=pygame.image.load("resources/crosshair.png")
 clock=pygame.time.Clock()
 
 # start game loop
@@ -30,6 +31,9 @@ while True:
     if pygame.event.get(pygame.QUIT):
         pygame.quit()
         sys.exit()
+    if pygame.event.get(pygame.MOUSEMOTION):
+        mpos=pygame.mouse.get_pos()
+
 
 
     xpos=xpos-(speed*direction)
@@ -40,6 +44,7 @@ while True:
     screen.blit(bgpicture, (0,0))
     screen.blit(bird,(xpos,200))
     screen.blit(tree,(200,100))
+    screen.blit(sigtekorn, mpos)
 
     clock.tick(30)
     pygame.display.flip()
