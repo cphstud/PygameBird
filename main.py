@@ -1,4 +1,5 @@
 import sys
+from random import randint
 import pygame
 
 #define variables
@@ -18,6 +19,8 @@ framerate=120
 pygame.init()
 #set screen
 screen=pygame.display.set_mode((width,height))
+# font for text
+myfont = pygame.font.SysFont("arial",30)
 # init clock from time
 clock=pygame.time.Clock()
 
@@ -32,10 +35,11 @@ croshair_rect = croshair.get_rect(center=(width/2,height/2))
 bird_rect=bird.get_rect(center=(xpos_bird,ypos_bird))
 
 #  create rect
-
-#start the loop
 active = False
-counter = 0
+counter = 1
+level = 1
+gamedict={"counter":1,"level":0, "liv":0}
+#start the loop
 while True:
     # check events with for-loop
     croshair_rect=croshair.get_rect(center = pygame.mouse.get_pos())
@@ -46,7 +50,11 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             #what should happen?
             if croshair_rect.colliderect(bird_rect):
-                xpos_bird=width+100
+                #counter = counter + 1
+                gamedict["counter"]=gamedict["counter"]+1
+                xpos_bird=width
+                # random ypos for bird
+                ypos_bird=randint(0,height)
         if event.type == pygame.MOUSEMOTION:
             pass
             #croshair_rect=croshair.get_rect(center = event.pos)
@@ -60,9 +68,18 @@ while True:
         screen.blit(startbut,(150,100))
     # modify moving objects
     else :
+        # adjust speed according to counter/score
+        if gamedict["counter"] % 5 == 0:
+            print("in counter")
+            gamedict["counter"]=1
+            gamedict["level"] = gamedict["level"] + 1
+            speed_bird=speed_bird+1
         xpos_bird=xpos_bird-speed_bird
         bird_rect = bird.get_rect(center=(xpos_bird, ypos_bird))
         #put paint stuff on screen
+        # put counter on screen
+        textobj=myfont.render(f'Score: {gamedict["counter"]}, level: {gamedict["level"]}',(0,0,0),(255,255,255))
+        screen.blit(textobj,(0,0))
         screen.blit(tree,(100,100))
         screen.blit(bird,bird_rect)
         screen.blit(croshair,croshair_rect)
