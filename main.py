@@ -1,6 +1,7 @@
 import sys
 import pygame
 import settings as s
+from random import randint
 
 def check_events():
     for event in pygame.event.get():
@@ -14,7 +15,8 @@ def check_events():
             print(bird_rect.center)
 
             if croshair_rect.colliderect(bird_rect):
-                bird_rect.center=(s.width+100,s.height)
+                bird_rect.center=(s.width+10,randint(0,s.height))
+                s.counter=s.counter+1
         if event.type == pygame.MOUSEMOTION:
             pass
             #croshair_rect=croshair.get_rect(center = event.pos)
@@ -26,6 +28,8 @@ pygame.init()
 screen=pygame.display.set_mode((s.width,s.height))
 # init clock from time
 clock=pygame.time.Clock()
+myfont=pygame.font.SysFont("arial",32)
+textbox=pygame.Rect(0,0,50,50)
 
 # init load images
 bg=pygame.image.load("resources/green2.jpg")
@@ -40,10 +44,8 @@ bird_rect=bird.get_rect(center=(s.xpos_bird,s.ypos_bird))
 #  create rect
 
 #start the loop
-active = False
-counter = 0
+
 while True:
-    counter +=1
     # check events with for-loop
     check_events()
 
@@ -56,6 +58,8 @@ while True:
     screen.blit(tree,(s.xpos_tree,s.ypos_tree))
     screen.blit(bird,bird_rect)
     screen.blit(croshair,croshair_rect)
+    text=myfont.render(f"score: {s.counter}",s.black,s.green)
+    screen.blit(text,textbox)
 
     #update screen
     pygame.display.update()
