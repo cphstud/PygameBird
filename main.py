@@ -1,23 +1,29 @@
 import sys
 import pygame
+import settings as s
+
+def check_events():
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            #what should happen?
+            print("MD")
+            print(croshair_rect.center)
+            print(bird_rect.center)
+
+            if croshair_rect.colliderect(bird_rect):
+                bird_rect.center=(s.width+100,s.height)
+        if event.type == pygame.MOUSEMOTION:
+            pass
+            #croshair_rect=croshair.get_rect(center = event.pos)
 
 #define variables
-white=(250,250,250)
-width=600
-height=400
-delta=int(width/10)
-
-xpos_bird=width-delta
-ypos_bird=delta
-xpos_tree=100
-ypos_tree=100
-
-speed_bird=1
-framerate=120
 
 pygame.init()
 #set screen
-screen=pygame.display.set_mode((width,height))
+screen=pygame.display.set_mode((s.width,s.height))
 # init clock from time
 clock=pygame.time.Clock()
 
@@ -28,8 +34,8 @@ bird=pygame.image.load("resources/bird.png")
 croshair=pygame.image.load("resources/crosshair.png")
 startbut=pygame.image.load("resources/start.jpeg")
 # create rects around stuff you want to target
-croshair_rect = croshair.get_rect(center=(width/2,height/2))
-bird_rect=bird.get_rect(center=(xpos_bird,ypos_bird))
+croshair_rect = croshair.get_rect(center=(s.width/2,s.height/2))
+bird_rect=bird.get_rect(center=(s.xpos_bird,s.ypos_bird))
 
 #  create rect
 
@@ -37,39 +43,20 @@ bird_rect=bird.get_rect(center=(xpos_bird,ypos_bird))
 active = False
 counter = 0
 while True:
-    # check events with for-loop
     counter +=1
-    print(f"running {counter}")
-    croshair_rect=croshair.get_rect(center = pygame.mouse.get_pos())
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            #what should happen?
-            if croshair_rect.colliderect(bird_rect):
-                xpos_bird=width+100
-        if event.type == pygame.MOUSEMOTION:
-            pass
-            #croshair_rect=croshair.get_rect(center = event.pos)
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_s:
-                active=not active
+    # check events with for-loop
+    check_events()
+
     #put background on screen
     screen.blit(bg,(0,0))
-    if not active:
-        screen.fill(white)
-        screen.blit(startbut,(150,100))
-    # modify moving objects
-    else :
-        xpos_bird=xpos_bird-speed_bird
-        bird_rect = bird.get_rect(center=(xpos_bird, ypos_bird))
-        #put paint stuff on screen
-        screen.blit(tree,(100,100))
-        screen.blit(bird,bird_rect)
-        screen.blit(croshair,croshair_rect)
+    croshair_rect=croshair.get_rect(center = pygame.mouse.get_pos())
+    bird_rect.x = bird_rect.x - s.speed_bird
+
+    #put paint stuff on screen
+    screen.blit(tree,(s.xpos_tree,s.ypos_tree))
+    screen.blit(bird,bird_rect)
+    screen.blit(croshair,croshair_rect)
 
     #update screen
     pygame.display.update()
-#tick the clock
-clock.tick(60)
+    clock.tick(s.framerate)
