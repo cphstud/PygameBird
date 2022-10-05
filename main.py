@@ -40,6 +40,7 @@ while True:
     # check events with for-loop
     counter +=1
     print(f"running {counter}")
+    croshair_rect=croshair.get_rect(center = pygame.mouse.get_pos())
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -49,7 +50,8 @@ while True:
             if croshair_rect.colliderect(bird_rect):
                 xpos_bird=width+100
         if event.type == pygame.MOUSEMOTION:
-            croshair_rect=croshair.get_rect(center = event.pos)
+            pass
+            #croshair_rect=croshair.get_rect(center = event.pos)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_s:
                 active=not active
