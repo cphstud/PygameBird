@@ -1,6 +1,7 @@
 import sys
 from random import randint
 import pygame
+from gamekeeper import Gamekeeper
 
 #define variables
 white=(250,250,250)
@@ -24,6 +25,8 @@ myfont = pygame.font.SysFont("arial",30)
 # init clock from time
 clock=pygame.time.Clock()
 
+# init gamekeeper
+mygamekeep = Gamekeeper(3)
 # init load images
 bg=pygame.image.load("resources/green2.jpg")
 tree=pygame.image.load("resources/tree2.png")
@@ -42,7 +45,8 @@ gamedict={"counter":1,"level":0, "liv":3}
 #start the loop
 while True:
     # har jeg liv til at fortsætte?
-    if gamedict["liv"]==0:
+    #if gamedict["liv"]==0:
+    if mygamekeep.gameover():
         active = False
         screen.fill(white)
         screen.blit(startbut,(150,100))
@@ -59,7 +63,8 @@ while True:
                 #what should happen?
                 if croshair_rect.colliderect(bird_rect):
                     #counter = counter + 1
-                    gamedict["counter"]=gamedict["counter"]+1
+                    #gamedict["counter"]=gamedict["counter"]+1
+                    mygamekeep.modifscore()
                     xpos_bird=width
                     # random ypos for bird
                     ypos_bird=randint(0,height)
@@ -84,7 +89,8 @@ while True:
                 speed_bird=speed_bird+1
             # hvis xpos < 0 så miste et liv
             if (xpos_bird < 0):
-                gamedict["liv"]=gamedict["liv"]-1
+                #gamedict["liv"]=gamedict["liv"]-1
+                mygamekeep.modifliv()
                 xpos_bird=width
                 ypos_bird=randint(0,height)
             else:
@@ -92,7 +98,8 @@ while True:
             bird_rect = bird.get_rect(center=(xpos_bird, ypos_bird))
             #put paint stuff on screen
             # put counter on screen
-            textobj=myfont.render(f'Score: {gamedict["counter"]}, level: {gamedict["level"]},liv: {gamedict["liv"]}',(0,0,0),(255,255,255))
+            #textobj=myfont.render(f'Score: {gamedict["counter"]}, level: {gamedict["level"]},liv: {gamedict["liv"]}',(0,0,0),(255,255,255))
+            textobj=myfont.render(f'Score: {mygamekeep.counter}, level: {gamedict["level"]},liv: {gamedict["liv"]}',(0,0,0),(255,255,255))
             screen.blit(textobj,(0,0))
             screen.blit(tree,(100,100))
             screen.blit(bird,bird_rect)
