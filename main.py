@@ -38,8 +38,6 @@ active = False
 counter = 0
 while True:
     # check events with for-loop
-    counter +=1
-    print(f"running {counter}")
     croshair_rect=croshair.get_rect(center = pygame.mouse.get_pos())
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -72,4 +70,4 @@ while True:
     #update screen
     pygame.display.update()
 #tick the clock
-clock.tick(60)
+    clock.tick(60)
