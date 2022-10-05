@@ -1,5 +1,7 @@
 import sys
 import pygame
+import settings as s
+from random import randint
 
 #define variables
 white=(250,250,250)
@@ -31,16 +33,34 @@ startbut=pygame.image.load("resources/start.jpeg")
 croshair_rect = croshair.get_rect(center=(width/2,height/2))
 bird_rect=bird.get_rect(center=(xpos_bird,ypos_bird))
 
+# multiple birds
+delta=s.height-s.height/10
+listofbirds=[]
+for i in range(0,s.numofbirds):
+    link=pygame.image.load("resources/bird.png")
+    speed=randint(1,4)
+    ypos=randint(s.height-delta,s.height)
+    xpos=randint(s.width,s.width+delta)
+    bird_rect=link.get_rect(center=(xpos,ypos))
+    tmpbird = {"name":f"bird_{i}",
+               "link":link,
+               "rect":bird_rect,
+               "counter":0,
+               "xpos":xpos,
+               "ypos":ypos,
+               "speed":speed,
+               "direction":1
+               }
+    listofbirds.append(tmpbird)
+
 #  create rect
 
 #start the loop
 active = False
 counter = 0
 while True:
-    # check events with for-loop
     counter +=1
-    print(f"running {counter}")
-    croshair_rect=croshair.get_rect(center = pygame.mouse.get_pos())
+    # check events with for-loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -57,19 +77,22 @@ while True:
                 active=not active
     #put background on screen
     screen.blit(bg,(0,0))
-    if not active:
-        screen.fill(white)
-        screen.blit(startbut,(150,100))
     # modify moving objects
-    else :
-        xpos_bird=xpos_bird-speed_bird
-        bird_rect = bird.get_rect(center=(xpos_bird, ypos_bird))
-        #put paint stuff on screen
-        screen.blit(tree,(100,100))
-        screen.blit(bird,bird_rect)
-        screen.blit(croshair,croshair_rect)
+    croshair_rect=croshair.get_rect(center = pygame.mouse.get_pos())
+
+    for bird in listofbirds:
+        bird["xpos"]=bird["xpos"]-(bird["speed"]*bird["direction"])
+        bird["rect"].x = bird["xpos"]
+
+    #put paint stuff on screen
+
+    for bird in listofbirds:
+        screen.blit(bird["link"],bird["rect"])
+    screen.blit(croshair,croshair_rect)
+
+    screen.blit(tree,(100,100))
 
     #update screen
     pygame.display.update()
+    clock.tick(30)
 #tick the clock
-clock.tick(60)
