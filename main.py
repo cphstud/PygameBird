@@ -13,7 +13,7 @@ ypos_bird=delta
 xpos_tree=100
 ypos_tree=100
 
-speed_bird=1
+speed_bird=3
 framerate=120
 
 pygame.init()
@@ -38,53 +38,67 @@ bird_rect=bird.get_rect(center=(xpos_bird,ypos_bird))
 active = False
 counter = 1
 level = 1
-gamedict={"counter":1,"level":0, "liv":0}
+gamedict={"counter":1,"level":0, "liv":3}
 #start the loop
 while True:
-    # check events with for-loop
-    croshair_rect=croshair.get_rect(center = pygame.mouse.get_pos())
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            #what should happen?
-            if croshair_rect.colliderect(bird_rect):
-                #counter = counter + 1
-                gamedict["counter"]=gamedict["counter"]+1
-                xpos_bird=width
-                # random ypos for bird
-                ypos_bird=randint(0,height)
-        if event.type == pygame.MOUSEMOTION:
-            pass
-            #croshair_rect=croshair.get_rect(center = event.pos)
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_s:
-                active=not active
-    #put background on screen
-    screen.blit(bg,(0,0))
-    if not active:
+    # har jeg liv til at fortsætte?
+    if gamedict["liv"]==0:
+        active = False
         screen.fill(white)
         screen.blit(startbut,(150,100))
-    # modify moving objects
-    else :
-        # adjust speed according to counter/score
-        if gamedict["counter"] % 5 == 0:
-            print("in counter")
-            gamedict["counter"]=1
-            gamedict["level"] = gamedict["level"] + 1
-            speed_bird=speed_bird+1
-        xpos_bird=xpos_bird-speed_bird
-        bird_rect = bird.get_rect(center=(xpos_bird, ypos_bird))
-        #put paint stuff on screen
-        # put counter on screen
-        textobj=myfont.render(f'Score: {gamedict["counter"]}, level: {gamedict["level"]}',(0,0,0),(255,255,255))
-        screen.blit(textobj,(0,0))
-        screen.blit(tree,(100,100))
-        screen.blit(bird,bird_rect)
-        screen.blit(croshair,croshair_rect)
+        pygame.quit()
+        sys.exit()
+    else:
+        # check events with for-loop
+        croshair_rect=croshair.get_rect(center = pygame.mouse.get_pos())
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                #what should happen?
+                if croshair_rect.colliderect(bird_rect):
+                    #counter = counter + 1
+                    gamedict["counter"]=gamedict["counter"]+1
+                    xpos_bird=width
+                    # random ypos for bird
+                    ypos_bird=randint(0,height)
+            if event.type == pygame.MOUSEMOTION:
+                pass
+                #croshair_rect=croshair.get_rect(center = event.pos)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_s:
+                    active=not active
+        #put background on screen
+        screen.blit(bg,(0,0))
+        if not active:
+            screen.fill(white)
+            screen.blit(startbut,(150,100))
+        # modify moving objects
+        else :
+            # adjust speed according to counter/score
+            if gamedict["counter"] % 5 == 0:
+                print("in counter")
+                gamedict["counter"]=1
+                gamedict["level"] = gamedict["level"] + 1
+                speed_bird=speed_bird+1
+            # hvis xpos < 0 så miste et liv
+            if (xpos_bird < 0):
+                gamedict["liv"]=gamedict["liv"]-1
+                xpos_bird=width
+                ypos_bird=randint(0,height)
+            else:
+                xpos_bird=xpos_bird-speed_bird
+            bird_rect = bird.get_rect(center=(xpos_bird, ypos_bird))
+            #put paint stuff on screen
+            # put counter on screen
+            textobj=myfont.render(f'Score: {gamedict["counter"]}, level: {gamedict["level"]},liv: {gamedict["liv"]}',(0,0,0),(255,255,255))
+            screen.blit(textobj,(0,0))
+            screen.blit(tree,(100,100))
+            screen.blit(bird,bird_rect)
+            screen.blit(croshair,croshair_rect)
 
-    #update screen
-    pygame.display.update()
-#tick the clock
-    clock.tick(60)
+        #update screen
+        pygame.display.update()
+    #tick the clock
+        clock.tick(60)
