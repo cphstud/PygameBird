@@ -19,8 +19,14 @@ screen = pygame.display.set_mode((width,height))
 bgpicture=pygame.image.load("resources/green2.png")
 tree=pygame.image.load("resources/tree2.png")
 bird=pygame.image.load("resources/bird.png")
+bird_rect=bird.get_rect()
+bird_rect.center=(500,200)
 sigtekorn=pygame.image.load("resources/crosshair.png")
+sigtekorn_rect=sigtekorn.get_rect()
+sigtekorn_rect.center=(0,0)
 clock=pygame.time.Clock()
+gamecounter=0
+
 
 # start game loop
 
@@ -33,7 +39,11 @@ while True:
         sys.exit()
     if pygame.event.get(pygame.MOUSEMOTION):
         mpos=pygame.mouse.get_pos()
-
+    if pygame.event.get(pygame.MOUSEBUTTONDOWN):
+        # er der kollision
+        if(sigtekorn_rect.colliderect(bird_rect) ):
+            bird_rect.y=height+100
+            gamecounter = gamecounter+1
 
 
     xpos=xpos-(speed*direction)
@@ -42,9 +52,12 @@ while True:
         bird=pygame.transform.flip(bird,True,False)
 
     screen.blit(bgpicture, (0,0))
-    screen.blit(bird,(xpos,200))
+    #screen.blit(bird,(xpos,200))
+    bird_rect.x=xpos
+    sigtekorn_rect.center=mpos
+    screen.blit(bird,bird_rect)
     screen.blit(tree,(200,100))
-    screen.blit(sigtekorn, mpos)
+    screen.blit(sigtekorn, sigtekorn_rect)
 
     clock.tick(30)
     pygame.display.flip()
